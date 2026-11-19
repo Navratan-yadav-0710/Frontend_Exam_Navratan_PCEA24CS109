@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Result Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .fail {
+            background-color: #ffcccc;
+        }
+
+        .pass {
+            background-color: #ccffcc;
+        }
+
+        #summary {
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Student Result Card</h1>
+
+    <button onclick="generateResults()">Generate Results</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Maths</th>
+                <th>Science</th>
+                <th>English</th>
+                <th>Total</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+
+        <tbody id="resultTable"></tbody>
+    </table>
+
+    <div id="summary"></div>
+
+    <script>
+        const students = [
+            { name: "Aman", maths: 85, science: 75, english: 90 },
+            { name: "Ravi", maths: 30, science: 65, english: 70 },
+            { name: "Neha", maths: 95, science: 90, english: 85 },
+            { name: "Karan", maths: 40, science: 35, english: 55 },
+            { name: "Priya", maths: 80, science: 85, english: 90 }
+        ];
+
+        function generateResults() {
+            let table = document.getElementById("resultTable");
+            let summary = document.getElementById("summary");
+
+            table.innerHTML = "";
+
+            let totalPercentages = 0;
+            let topper = "";
+            let highestTotal = -1;
+
+            students.forEach(student => {
+                let total = student.maths + student.science + student.english;
+                let percentage = (total / 300) * 100;
+
+                let grade;
+
+                if (percentage >= 75) {
+                    grade = "A";
+                } else if (percentage >= 60) {
+                    grade = "B";
+                } else if (percentage >= 50) {
+                    grade = "C";
+                } else {
+                    grade = "D";
+                }
+
+                let result =
+                    student.maths >= 33 &&
+                    student.science >= 33 &&
+                    student.english >= 33
+                    ? "Pass"
+                    : "Fail";
+
+                totalPercentages += percentage;
+
+                if (total > highestTotal) {
+                    highestTotal = total;
+                    topper = student.name;
+                }
+
+                let row = document.createElement("tr");
+
+                row.className = result === "Fail" ? "fail" : "pass";
+
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.maths}</td>
+                    <td>${student.science}</td>
+                    <td>${student.english}</td>
+                    <td>${total}</td>
+                    <td>${percentage.toFixed(2)}%</td>
+                    <td>${grade}</td>
+                    <td>${result}</td>
+                `;
+
+                table.appendChild(row);
+            });
+
+            let average = totalPercentages / students.length;
+
+            summary.innerHTML = `
+                <h3>Class Summary</h3>
+                <p><b>Topper:</b> ${topper}</p>
+                <p><b>Class Average:</b> ${average.toFixed(2)}%</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
